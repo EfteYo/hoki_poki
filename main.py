@@ -62,6 +62,8 @@ class App:
     def print_accounts(self, session):
         ...
 
+def test():
+    ...
 
 if __name__ == "__main__":
     session = None
