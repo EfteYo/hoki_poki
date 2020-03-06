@@ -4,12 +4,13 @@ from models import Session, Account, Game
 
 '''
 To do:
--Accounts in-app generieren
--Stakes adden
+- Stakes adden
 '''
+
 
 class App:
     def __init__(self, master, session):
+        self.current_account = 0
         self.session = session
         self.acc_names = ["Account 1", "Account 2"] #Task 1 
 
@@ -53,7 +54,9 @@ class App:
         self.btn_new_game.grid(row=0, column=1)
         self.session.accounts[0].add_game(time(),42) #add stakes
 
-
+    def set_current_account(self, n):
+        self.current_account = n
+        
 
     def save_session(self, session):
         # stores the session from the argument in a database
@@ -61,9 +64,6 @@ class App:
 
     def print_accounts(self, session):
         ...
-
-def test():
-    ...
 
 if __name__ == "__main__":
     session = None

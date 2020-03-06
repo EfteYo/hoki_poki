@@ -29,7 +29,7 @@ class Game:
         self.result = 0
         self.costs = 0
         self.profit = 0
-
+        
     def end(self, endtime, result):
         self.end = endtime
         self.result = result
