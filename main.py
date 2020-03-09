@@ -2,80 +2,107 @@ from time import time, gmtime
 import tkinter as tk
 from models import Session, Account, Game
 
-'''
-To do:
-- Stakes adden
-'''
-
 
 class App:
-    def __init__(self, master, session):
-        self.current_account = 0
-        self.session = session
-        self.acc_names = ["Account 1", "Account 2"] #Task 1 
+    def __init__(self, master):
+        self.session = None
+        self.master = master
 
-        master.title("Hoki Poki 1.0")
+        # Presets for accounts
+        self.acc_preset_a = ["Account 1"]
+        self.acc_preset_b = ["Account 1",
+                             "Account 2",
+                             "Account 3",
+                             "Account 4"]
 
-        self.frame = tk.Frame(master)  # frame erscheint auf dem master
-        self.frame.grid()  # grid erscheint auf frame
+        master.title("Hoki Poki 1.1")
 
-        if self.session == None:
-            self.btn_start = tk.Button(
-                self.frame, text="Start Session", command=lambda: self.start_session("test"))
-            self.btn_start.grid(row=0, column=0)
-        else:
-            self.init_gui()
+        # Frame on the top of the window to show information about the session
+        self.header = tk.Frame(master)
+        self.header.grid(padx=10, pady=10, sticky="w")
 
-    def init_gui(self):
-        self.acc_tabs = []
-        i = 0
-        for account in self.session.accounts:
-            tab = tk.Button(self.frame, text=account.name, command=lambda: self.start_game())
-            tab.grid(row=i, column=0)
-            self.acc_tabs.append(tab)
-            i += 1
+        self.brand = tk.Label(self.header, text="Hoki Poki", anchor="w")
+        self.brand.grid(sticky="w")
 
-        tab = tk.Button(self.frame, text="New Account")
-        tab.grid(row=i, column=0)
-        self.acc_tabs.append(tab)
+        self.stats_l = tk.Button(self.header, text="See Stats", command=lambda: self.show_stats())
+        self.stats_l.grid(row=0, column=1, sticky="w")
+
+        self.show_new_session()
+
+    def show_new_session(self):
+        '''Part to start new sessions'''
+        self.sess_name_l = tk.Label(self.header, text="Session Name:", anchor="w")
+        self.sess_name_l.grid(row=1, column=0, sticky="w")
+        self.sess_name_i = tk.Entry(self.header)
+        self.sess_name_i.grid(row=1, column=1)
+        self.sess_startbalance_l = tk.Label(self.header, text="Startbalance:")
+        self.sess_startbalance_l.grid(row=1, column=2)
+        self.sess_startbalance_i = tk.Entry(self.header)
+        self.sess_startbalance_i.grid(row=1, column=3)
+        self.btn_start = tk.Button(
+            self.header, text="Start Session", command=lambda: self.start_session(self.sess_name_i.get(), int(self.sess_startbalance_i.get())))
+        self.btn_start.grid(row=1, column=4)
+
+    def hide_new_session(self):
+        self.sess_name_l.grid_forget()
+        self.sess_name_i.grid_forget()
+        self.sess_startbalance_l.grid_forget()
+        self.sess_startbalance_i.grid_forget()
+        self.btn_start.grid_forget()
+
+    def show_cur_session(self):
+        '''Part with information about the session'''
+        self.sess_show_name_l = tk.Label(self.header, text=self.session.name, anchor="w")
+        self.sess_show_name_l.grid(row=1, column=0, sticky="w")
+        self.btn_end = tk.Button(
+            self.header, text="End Session", command=lambda: self.end_session())
+        self.btn_end.grid(row=1, column=1)
+
+    def hide_cur_session(self):
+        self.sess_show_name_l.grid_forget()
+        self.btn_end.grid_forget()
 
     def start_session(self, sessionname, startbalance=0):
         self.session = Session(sessionname, time(), startbalance)
-        self.btn_start.grid_forget()
-        for element in self.acc_names:
-            self.session.add_account(element)
-        self.init_gui()
+        self.hide_new_session()
+        self.show_cur_session()
+
+        # Frame to show the main content, thus the accounts and their games
+        self.body = tk.Frame(self.master)
+        self.body.grid(padx=10, pady=10)
+
+        # creates the accounts from the templates
+        for i, name in enumerate(self.acc_preset_b):
+            self.session.add_account(name, i)
+
+        # brings the created accounts on the screen (the body frame)
+        for acc in self.session.accounts:
+            acc.show(self.body)
+
         print("Session startet at {}".format(gmtime(time())))
 
-    def start_game(self):
-        self.btn_new_game = tk.Button(
-            self.frame, text = "Start Game" # add command
-        )
-        self.btn_new_game.grid(row=0, column=1)
-        self.session.accounts[0].add_game(time(),42) #add stakes
-
-    def set_current_account(self, n):
-        self.current_account = n
-        
+    def end_session(self):
+        self.session = None
+        self.body.grid_forget()
+        self.hide_cur_session()
+        self.show_new_session()
 
     def save_session(self, session):
-        # stores the session from the argument in a database
+        '''stores the session from the argument in a database'''
         ...
 
-    def print_accounts(self, session):
-        ...
+    def show_stats(self):
+        self.top = tk.Toplevel()
+        self.top.title("Hoki Poki 1.1 Stats")
+        self.top_frame = tk.Frame(self.top)
+        self.top_frame.grid()
+        self.top_l = tk.Label(self.top_frame, text="Crazy Stats")
+        self.top_l.grid()
+        self.ex_l = tk.Label(self.top_frame, text="0030023523534025")
+        self.ex_l.grid(row=1)
+
 
 if __name__ == "__main__":
-    session = None
-    root = tk.Tk()
-    root.geometry("400x200+200+200")
-    app = App(root, session)
-    # heißt, dass das Fenster permanent geöffnet bleibt, bis es geschlossen wird.
-    root.mainloop()
-
-    # if user click "start new session"
-    # session = startSession("name")
-    # session.add_account("Per Flow")
-    # session.add_account("Ralph")
-    # print(session.name)
-    # print(session.accounts[0].name)
+    root = tk.Tk()          # creates the main window
+    app = App(root)         # calls our app class from above
+    root.mainloop()         # permission for the window to stay open
