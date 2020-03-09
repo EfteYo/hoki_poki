@@ -30,6 +30,6 @@ class Game:
         self.costs = 0
         self.profit = 0
         
-    def end(self, endtime, result):
+    def endGame(self, endtime, result):
         self.end = endtime
         self.result = result
