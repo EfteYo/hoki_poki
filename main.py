@@ -6,6 +6,7 @@ from models import Session, Account, Game
 class App:
     def __init__(self, master):
         self.session = None
+        self.master = master
 
         # Presets for accounts
         self.acc_preset_a = ["Account 1"]
@@ -18,27 +19,26 @@ class App:
 
         # Frame on the top of the window to show information about the session
         self.header = tk.Frame(master)
-        self.header.grid()
+        self.header.grid(padx=10, pady=10)
 
-        # Frame to show the main content, thus the accounts and their games
-        self.body = tk.Frame(master)
-        self.body.grid()
+        self.brand = tk.Label(self.header, text="Hoki Poki", anchor="w")
+        self.brand.grid(sticky="w")
 
         self.show_new_session()
 
     def show_new_session(self):
         '''Part to start new sessions'''
-        self.sess_name_l = tk.Label(self.header, text="Session Name:")
-        self.sess_name_l.grid()
+        self.sess_name_l = tk.Label(self.header, text="Session Name:", anchor="w")
+        self.sess_name_l.grid(row=1, column=0, sticky="w")
         self.sess_name_i = tk.Entry(self.header)
-        self.sess_name_i.grid(row=0, column=1)
+        self.sess_name_i.grid(row=1, column=1)
         self.sess_startbalance_l = tk.Label(self.header, text="Startbalance:")
-        self.sess_startbalance_l.grid(row=0, column=2)
+        self.sess_startbalance_l.grid(row=1, column=2)
         self.sess_startbalance_i = tk.Entry(self.header)
-        self.sess_startbalance_i.grid(row=0, column=3)
+        self.sess_startbalance_i.grid(row=1, column=3)
         self.btn_start = tk.Button(
             self.header, text="Start Session", command=lambda: self.start_session(self.sess_name_i.get(), int(self.sess_startbalance_i.get())))
-        self.btn_start.grid(row=0, column=4)
+        self.btn_start.grid(row=1, column=4)
 
     def hide_new_session(self):
         self.sess_name_l.grid_forget()
@@ -49,11 +49,11 @@ class App:
 
     def show_cur_session(self):
         '''Part with information about the session'''
-        self.sess_show_name_l = tk.Label(self.header, text=self.session.name)
-        self.sess_show_name_l.grid(row=0, column=0)
+        self.sess_show_name_l = tk.Label(self.header, text=self.session.name, anchor="w")
+        self.sess_show_name_l.grid(row=1, column=0, sticky="w")
         self.btn_end = tk.Button(
             self.header, text="End Session", command=lambda: self.end_session())
-        self.btn_end.grid(row=0, column=1)
+        self.btn_end.grid(row=1, column=1)
 
     def hide_cur_session(self):
         self.sess_show_name_l.grid_forget()
@@ -63,6 +63,10 @@ class App:
         self.session = Session(sessionname, time(), startbalance)
         self.hide_new_session()
         self.show_cur_session()
+
+        # Frame to show the main content, thus the accounts and their games
+        self.body = tk.Frame(self.master)
+        self.body.grid(padx=10, pady=10)
 
         # creates the accounts from the templates
         for i, name in enumerate(self.acc_preset_a):
@@ -76,7 +80,7 @@ class App:
 
     def end_session(self):
         self.session = None
-        self.body.grid_remove()
+        self.body.grid_forget()
         self.hide_cur_session()
         self.show_new_session()
 
