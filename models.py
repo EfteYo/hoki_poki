@@ -26,7 +26,11 @@ class Account:
         self.name = name
 
     def add_game(self, starttime, stake):
-        self.games.append(Game(starttime, stake, self.acc_frame))
+        try:
+            self.games.append(Game(starttime, int(stake), self.acc_frame))
+        except ValueError:
+            print("Wooong")
+
         self.hide_new_game()
         self.show_end_game()
 
@@ -38,7 +42,7 @@ class Account:
         self.new_game_stake_i = tk.Entry(self.acc_frame)
         self.new_game_stake_i.grid()
         self.new_game_btn = tk.Button(
-            self.acc_frame, text="New Game", command=lambda: self.add_game(time(), 100))
+            self.acc_frame, text="New Game", command=lambda: self.add_game(time(), self.new_game_stake_i.get()))
         self.new_game_btn.grid()
 
     def hide_new_game(self):
@@ -55,6 +59,10 @@ class Account:
         self.end_game_btn = tk.Button(
             self.acc_frame, text="Finish Game", command=lambda: self.games[len(self.games)-1].end_game(time(), self.result_i.get()))
         self.end_game_btn.grid()
+
+    def hide_end_game(self):
+        self.result_i.grid_forget()
+        self.end_game_btn.grid_forget()
 
 
 class Game:
@@ -75,12 +83,13 @@ class Game:
     def end_game(self, endtime, result):
         self.end = endtime
         try:
-            int(result)
-            self.result = result
+            self.result = int(result)
         except ValueError:
             self.error_l = tk.Label(self.frame, text="Input was incorrect")
             self.error_l.grid()
-
+        
+        self.profit = self.result - self.costs 
+        self.hide()
         #! Need to colapse data and calculate profit
 
     def show(self, frame):
@@ -94,11 +103,18 @@ class Game:
         self.game_costs = tk.Label(frame, textvariable=self.costs_var)
         self.game_costs.grid()
         self.add_cost_one = tk.Button(
-            frame, text="+1", command=lambda: self.add_cost(100))
+            frame, text="1bb", command=lambda: self.add_cost(self.stake))
         self.add_cost_one.grid()
         self.add_cost_two = tk.Button(
-            frame, text="+2", command=lambda: self.add_cost(200))
+            frame, text="2bb", command=lambda: self.add_cost(self.stake*2))
         self.add_cost_two.grid()
         self.add_cost_three = tk.Button(
-            frame, text="+3", command=lambda: self.add_cost(300))
+            frame, text="3bb", command=lambda: self.add_cost(self.stake*3))
         self.add_cost_three.grid()
+
+    def hide(self):
+        self.game_l.grid_forget()
+        self.game_costs.grid_forget()
+        self.add_cost_one.grid_forget()
+        self.add_cost_two.grid_forget()
+        self.add_cost_three.grid_forget()
