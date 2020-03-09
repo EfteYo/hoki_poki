@@ -19,10 +19,13 @@ class App:
 
         # Frame on the top of the window to show information about the session
         self.header = tk.Frame(master)
-        self.header.grid(padx=10, pady=10)
+        self.header.grid(padx=10, pady=10, sticky="w")
 
         self.brand = tk.Label(self.header, text="Hoki Poki", anchor="w")
         self.brand.grid(sticky="w")
+
+        self.stats_l = tk.Button(self.header, text="See Stats", command=lambda: self.show_stats())
+        self.stats_l.grid(row=0, column=1, sticky="w")
 
         self.show_new_session()
 
@@ -69,7 +72,7 @@ class App:
         self.body.grid(padx=10, pady=10)
 
         # creates the accounts from the templates
-        for i, name in enumerate(self.acc_preset_a):
+        for i, name in enumerate(self.acc_preset_b):
             self.session.add_account(name, i)
 
         # brings the created accounts on the screen (the body frame)
@@ -87,6 +90,16 @@ class App:
     def save_session(self, session):
         '''stores the session from the argument in a database'''
         ...
+
+    def show_stats(self):
+        self.top = tk.Toplevel()
+        self.top.title("Hoki Poki 1.1 Stats")
+        self.top_frame = tk.Frame(self.top)
+        self.top_frame.grid()
+        self.top_l = tk.Label(self.top_frame, text="Crazy Stats")
+        self.top_l.grid()
+        self.ex_l = tk.Label(self.top_frame, text="0030023523534025")
+        self.ex_l.grid(row=1)
 
 
 if __name__ == "__main__":
