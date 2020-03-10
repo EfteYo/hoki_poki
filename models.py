@@ -15,6 +15,13 @@ class Session:
     def add_account(self, name, idd):
         self.accounts.append(Account(name, idd))
 
+    def evaluate_session(self):
+        self.profit_total = 0
+        for account in self.accounts:
+            for game in account.games:
+                self.profit_total += game.profit
+        
+        self.balance_total = self.profit_total + self.startbalance
 
 class Account:
     def __init__(self, name, idd):
@@ -57,12 +64,18 @@ class Account:
         self.result_i = tk.Entry(self.acc_frame)
         self.result_i.grid()
         self.end_game_btn = tk.Button(
-            self.acc_frame, text="Finish Game", command=lambda: self.games[len(self.games)-1].end_game(time(), self.result_i.get()))
+            self.acc_frame, text="Finish Game", command=lambda: self.end_game())
         self.end_game_btn.grid()
 
     def hide_end_game(self):
         self.result_i.grid_forget()
         self.end_game_btn.grid_forget()
+
+    def end_game(self):
+        self.games[-1].end_game(time(), self.result_i.get())
+        self.hide_end_game()
+        self.show_new_game()
+
 
 
 class Game:
@@ -84,12 +97,15 @@ class Game:
         self.end = endtime
         try:
             self.result = int(result)
+            self.profit = self.result - self.costs 
+            self.hide()
+            self.show_profit_l = tk.Label(self.frame, text = str(self.profit))
+            self.show_profit_l.grid()
+
         except ValueError:
-            self.error_l = tk.Label(self.frame, text="Input was incorrect")
-            self.error_l.grid()
+            print("Wooong")
         
-        self.profit = self.result - self.costs 
-        self.hide()
+
         #! Need to colapse data and calculate profit
 
     def show(self, frame):

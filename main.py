@@ -82,10 +82,25 @@ class App:
         print("Session startet at {}".format(gmtime(time())))
 
     def end_session(self):
+        
+        self.session.evaluate_session()
+
+        self.session_stats_f = tk.Frame(self.master)
+        self.session_stats_f.grid(padx=10, pady=10)
+
+        self.profit_total_l = tk.Label(self.session_stats_f, text = "Total profit: {}".format(self.session.profit_total), anchor = "w")
+        self.profit_total_l.grid()
+
+        self.balance_total_l = tk.Label(self.session_stats_f, text = "Total balance: {}".format(self.session.balance_total), anchor = "w")
+        self.balance_total_l.grid()
+
+        
+
         self.session = None
         self.body.grid_forget()
         self.hide_cur_session()
         self.show_new_session()
+
 
     def save_session(self, session):
         '''stores the session from the argument in a database'''
