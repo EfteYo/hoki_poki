@@ -83,6 +83,7 @@ class App:
 
     def end_session(self):
         
+        self.session.end = time()
         self.session.evaluate_session()
 
         self.session_stats_f = tk.Frame(self.master)
@@ -94,7 +95,15 @@ class App:
         self.balance_total_l = tk.Label(self.session_stats_f, text = "Total balance: {}".format(self.session.balance_total), anchor = "w")
         self.balance_total_l.grid()
 
+        self.rake_total_l = tk.Label(self.session_stats_f, text = "Total rake: {}".format(self.session.rake_total), anchor = "w")
+        self.rake_total_l.grid()
+
+        self.amount_games_l = tk.Label(self.session_stats_f, text = "Games: {}".format(self.session.amount_games), anchor = "w")
+        self.amount_games_l.grid()
         
+        self.duration_l = tk.Label(self.session_stats_f, text = "Duration: {}:{}".format((self.session.duration//3600),(self.session.duration//60)), anchor = "w")
+        self.duration_l.grid()
+
 
         self.session = None
         self.body.grid_forget()

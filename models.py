@@ -17,11 +17,23 @@ class Session:
 
     def evaluate_session(self):
         self.profit_total = 0
+        self.rake_total = 0
+        self.cost_total = 0
+        self.amount_games = 0
+        self.amount_costs = 0
         for account in self.accounts:
             for game in account.games:
                 self.profit_total += game.profit
+                self.rake_total += game.rake
+                self.cost_total += game.costs
+                self.amount_costs += game.costs // game.stake
+                self.amount_games += 1
         
+        self.duration = round(self.end - self.start)
+        
+
         self.balance_total = self.profit_total + self.startbalance
+
 
 class Account:
     def __init__(self, name, idd):
@@ -34,7 +46,7 @@ class Account:
 
     def add_game(self, starttime, stake):
         try:
-            self.games.append(Game(starttime, int(stake), self.acc_frame))
+            self.games.append(Game(starttime, float(stake), self.acc_frame))
         except ValueError:
             print("Wooong")
 
@@ -77,7 +89,6 @@ class Account:
         self.show_new_game()
 
 
-
 class Game:
     def __init__(self, starttime, stake, frame):
         self.start = starttime
@@ -95,16 +106,20 @@ class Game:
 
     def end_game(self, endtime, result):
         self.end = endtime
+        self.rake = 0
         try:
-            self.result = int(result)
-            self.profit = self.result - self.costs 
+            self.result = float(result)
+            if self.result > 0:
+                self.profit = self.result*0.95 - self.costs
+                self.rake = self.result*0.05
+            elif self.result <= 0:
+                self.profit = self.result - self.costs
             self.hide()
-            self.show_profit_l = tk.Label(self.frame, text = str(self.profit))
+            self.show_profit_l = tk.Label(self.frame, text=str(self.profit))
             self.show_profit_l.grid()
 
         except ValueError:
             print("Wooong")
-        
 
         #! Need to colapse data and calculate profit
 
