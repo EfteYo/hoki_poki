@@ -121,7 +121,6 @@ class Game:
         except ValueError:
             print("Wooong")
 
-        #! Need to colapse data and calculate profit
 
     def show(self, frame):
         # Description
@@ -133,15 +132,17 @@ class Game:
         self.costs_var.set("Costs 0")
         self.game_costs = tk.Label(frame, textvariable=self.costs_var)
         self.game_costs.grid()
+        btn_frame = tk.Frame(frame)
+        btn_frame.grid()
         self.add_cost_one = tk.Button(
-            frame, text="1bb", command=lambda: self.add_cost(self.stake))
-        self.add_cost_one.grid()
+            btn_frame, text="1bb", command=lambda: self.add_cost(self.stake))
+        self.add_cost_one.grid(column=0, row=0)
         self.add_cost_two = tk.Button(
-            frame, text="2bb", command=lambda: self.add_cost(self.stake*2))
-        self.add_cost_two.grid()
+            btn_frame, text="2bb", command=lambda: self.add_cost(self.stake*2))
+        self.add_cost_two.grid(column=1, row=0)
         self.add_cost_three = tk.Button(
-            frame, text="3bb", command=lambda: self.add_cost(self.stake*3))
-        self.add_cost_three.grid()
+            btn_frame, text="3bb", command=lambda: self.add_cost(self.stake*3))
+        self.add_cost_three.grid(column=2, row=0)
 
     def hide(self):
         self.game_l.grid_forget()
