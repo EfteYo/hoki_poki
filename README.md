@@ -11,9 +11,9 @@ helps you poki
 
 
 - [] bei wooong auch interface wiederherstellen oder neueingabe ermöglichen
-- [] hässliche Zeitform ändern
+- [x] hässliche Zeitform ändern
 - [] Alte totalbankroll wird irgendwo gespeichert und dann als "vorschlag" in bankroll schon eingegeben bei start oder start neuer session
-- [] Alte sessionergebnisse sollen verschwinden wenn man eine neue session gestartet hat, aber wieder sichtbar werden wenn diese beendet wurde
+- [x] Alte sessionergebnisse sollen verschwinden wenn man eine neue session gestartet hat, aber wieder sichtbar werden wenn diese beendet wurde
 
 Mit verarbeiteten Werten über mehrere Sessions arbeiten:
 - [] Anzahl der Sessions speichern
