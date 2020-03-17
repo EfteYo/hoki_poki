@@ -27,6 +27,8 @@ class App:
         self.stats_l = tk.Button(self.header, text="See Stats", command=lambda: self.show_stats())
         self.stats_l.grid(row=0, column=1, sticky="w")
 
+        self.new_account_l = tk.Button(self.header, text="New Account", command=lambda: self.session.add_account)
+
         self.error_message_l = tk.Label(self.header, text = "", anchor="e")
         self.error_message_l.grid(row=0, column=2,columnspan=3, sticky = "e")
 
@@ -68,7 +70,7 @@ class App:
     def start_session(self, sessionname, startbalance):
         try:
             self.clear_error()
-            self.session = Session(sessionname, time(), int(startbalance))
+            self.session = Session(sessionname, time(), float(startbalance))
             self.hide_new_session()
             self.show_cur_session()
 
@@ -92,10 +94,6 @@ class App:
 
         except ValueError:
             self.show_error("Startbalance must be a number")
-            
-
-        
-         
 
         # Frame to show the main content, thus the accounts and their games
 

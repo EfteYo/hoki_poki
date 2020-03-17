@@ -8,16 +8,17 @@ helps you poki
 - [] include start balance for each account
 - [] Beträge übertragen auf nächsten start des programms
 - [] daten speichern und verarbeiten
-
-
-- [] bei wooong auch interface wiederherstellen oder neueingabe ermöglichen
-- [x] hässliche Zeitform ändern
-- [] Alte totalbankroll wird irgendwo gespeichert und dann als "vorschlag" in bankroll schon eingegeben bei start oder start neuer session
-- [x] Alte sessionergebnisse sollen verschwinden wenn man eine neue session gestartet hat, aber wieder sichtbar werden wenn diese beendet wurde
+- [] accounts hinzufügen
 
 Mit verarbeiteten Werten über mehrere Sessions arbeiten:
 - [] Anzahl der Sessions speichern
 - [] Gesamtpokizeit speichern
+
+- [] bei wooong auch interface wiederherstellen oder neueingabe ermöglichen
+- [x] hässliche Zeitform ändern
+- [x] Alte sessionergebnisse sollen verschwinden wenn man eine neue session gestartet hat, aber wieder sichtbar werden wenn diese beendet wurde
+
+
 
 ___
 

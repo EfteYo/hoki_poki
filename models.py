@@ -1,5 +1,6 @@
 from time import time, gmtime
 import tkinter as tk
+import json
 
 
 class Session:
@@ -28,11 +29,47 @@ class Session:
                 self.cost_total += game.costs
                 self.amount_costs += game.costs // game.stake
                 self.amount_games += 1
-        
+
         self.duration = round(self.end - self.start)
-        
 
         self.balance_total = self.profit_total + self.startbalance
+
+    def session_to_JSON(self):
+        accounts = []
+        for account in self.accounts:
+            games = []
+            for game in account.games:
+                game_dict = {
+                    "starttime": game.start,
+                    "endtime": game.end,
+                    "stake": game.stake,
+                    "result": game.result,
+                    "costs": game.costs,
+                    "profit": game.profit
+                }
+                games.append(game_dict)
+
+            account_dict = {
+                "name": account.name,
+                "games": games
+            }
+            accounts.append(account_dict)
+
+        session_stats_dict = {
+            "name": self.name,
+            "starttime": self.start,
+            "endtime": self.end,
+            "startbalance": self.start,
+            "endbalance": self.balance_total,
+            "profit": self.profit_total,
+            "rake": self.rake_total,
+            "costs": self.cost_total,
+            "amount_costs": self.amount_costs,
+            "duration": self.duration,
+            "accounts": accounts
+        }
+
+        return json.dumps(session_stats_dict)
 
 
 class Account:
@@ -47,11 +84,12 @@ class Account:
     def add_game(self, starttime, stake):
         try:
             self.games.append(Game(starttime, float(stake), self.acc_frame))
+            self.hide_new_game()
+            self.show_end_game()
         except ValueError:
             print("Wooong")
 
-        self.hide_new_game()
-        self.show_end_game()
+
 
     def show(self, frame):
         self.acc_frame = tk.Frame(frame)
@@ -120,7 +158,6 @@ class Game:
 
         except ValueError:
             print("Wooong")
-
 
     def show(self, frame):
         # Description
