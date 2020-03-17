@@ -27,7 +27,11 @@ class App:
         self.stats_l = tk.Button(self.header, text="See Stats", command=lambda: self.show_stats())
         self.stats_l.grid(row=0, column=1, sticky="w")
 
-        self.new_account_l = tk.Button(self.header, text="New Account", command=lambda: self.session.add_account)
+        self.new_account_l = tk.Button(self.header, text="New Account", command=lambda: self.session.add_account(str(self.new_account_i.get()), self.session.accounts[-1].idd))
+        self.new_account_l.grid(row=2, column=1, sticky="w")
+
+        self.new_account_i = tk.Entry(self.header)
+        self.new_account_i.grid(row=2, column=2, sticky="w")
 
         self.error_message_l = tk.Label(self.header, text = "", anchor="e")
         self.error_message_l.grid(row=0, column=2,columnspan=3, sticky = "e")
