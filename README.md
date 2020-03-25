@@ -4,6 +4,9 @@ helps you poki
 
 ## API
 
+dbname dbs331875
+dbusername dbu383605
+hostname db5000341346.hosting-data.io
 dbpw shalfasfun8Z/N(znaosizd
 
 ## TODO
