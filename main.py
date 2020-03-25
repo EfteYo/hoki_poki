@@ -27,6 +27,15 @@ class App:
         self.stats_l = tk.Button(self.header, text="See Stats", command=lambda: self.show_stats())
         self.stats_l.grid(row=0, column=1, sticky="w")
 
+        self.new_account_l = tk.Button(self.header, text="New Account", command=lambda: self.session.add_account(str(self.new_account_i.get()), self.session.accounts[-1].idd))
+        self.new_account_l.grid(row=2, column=1, sticky="w")
+
+        self.new_account_i = tk.Entry(self.header)
+        self.new_account_i.grid(row=2, column=2, sticky="w")
+
+        self.error_message_l = tk.Label(self.header, text = "", anchor="e")
+        self.error_message_l.grid(row=0, column=2,columnspan=3, sticky = "e")
+
         self.show_new_session()
 
     def show_new_session(self):
@@ -40,7 +49,7 @@ class App:
         self.sess_startbalance_i = tk.Entry(self.header)
         self.sess_startbalance_i.grid(row=1, column=3)
         self.btn_start = tk.Button(
-            self.header, text="Start Session", command=lambda: self.start_session(self.sess_name_i.get(), int(self.sess_startbalance_i.get())))
+            self.header, text="Start Session", command=lambda: self.start_session(self.sess_name_i.get(), self.sess_startbalance_i.get()))
         self.btn_start.grid(row=1, column=4)
 
     def hide_new_session(self):
@@ -62,24 +71,35 @@ class App:
         self.sess_show_name_l.grid_forget()
         self.btn_end.grid_forget()
 
-    def start_session(self, sessionname, startbalance=0):
-        self.session = Session(sessionname, time(), startbalance)
-        self.hide_new_session()
-        self.show_cur_session()
+    def start_session(self, sessionname, startbalance):
+        try:
+            self.clear_error()
+            self.session = Session(sessionname, time(), float(startbalance))
+            self.hide_new_session()
+            self.show_cur_session()
+
+            try:
+                self.session_stats_f.grid_remove()
+            except AttributeError:
+                pass
+
+            self.body = tk.Frame(self.master)
+            self.body.grid(padx=10, pady=10)
+
+            # creates the accounts from the templates
+            for i, name in enumerate(self.acc_preset_b):
+                self.session.add_account(name, i)
+
+            # brings the created accounts on the screen (the body frame)
+            for acc in self.session.accounts:
+                acc.show(self.body)
+
+            print("Session startet at {}".format(gmtime(time())))
+
+        except ValueError:
+            self.show_error("Startbalance must be a number")
 
         # Frame to show the main content, thus the accounts and their games
-        self.body = tk.Frame(self.master)
-        self.body.grid(padx=10, pady=10)
-
-        # creates the accounts from the templates
-        for i, name in enumerate(self.acc_preset_b):
-            self.session.add_account(name, i)
-
-        # brings the created accounts on the screen (the body frame)
-        for acc in self.session.accounts:
-            acc.show(self.body)
-
-        print("Session startet at {}".format(gmtime(time())))
 
     def end_session(self):
         
@@ -101,7 +121,7 @@ class App:
         self.amount_games_l = tk.Label(self.session_stats_f, text = "Games: {}".format(self.session.amount_games), anchor = "w")
         self.amount_games_l.grid()
         
-        self.duration_l = tk.Label(self.session_stats_f, text = "Duration: {}:{}".format((self.session.duration//3600),(self.session.duration//60)), anchor = "w")
+        self.duration_l = tk.Label(self.session_stats_f, text = "Duration: {}".format(self.format_duration(self.session.duration)), anchor = "w")
         self.duration_l.grid()
 
 
@@ -124,6 +144,28 @@ class App:
         self.top_l.grid()
         self.ex_l = tk.Label(self.top_frame, text="0030023523534025")
         self.ex_l.grid(row=1)
+
+    def format_duration(self, duration):
+        duration_f = ""
+        if duration//3600 < 10:
+            duration_f += "0"
+            duration_f += str(duration//3600)
+        else:
+            duration_f += str(duration//3600)
+        duration_f += ":"
+        if duration%3600//60 < 10:
+            duration_f += "0"
+            duration_f += (str(duration%3600//60))
+        else:
+            duration_f += (str(duration%3600//60))
+        return duration_f
+        
+    def show_error(self, message):
+        self.error_message_l.configure(text = message)   
+
+    def clear_error(self):
+        self.error_message_l.configure(text = "")
+        
 
 
 if __name__ == "__main__":
