@@ -124,7 +124,7 @@ class App:
         self.duration_l = tk.Label(self.session_stats_f, text = "Duration: {}".format(self.format_duration(self.session.duration)), anchor = "w")
         self.duration_l.grid()
 
-
+        self.session.store()
         self.session = None
         self.body.grid_forget()
         self.hide_cur_session()

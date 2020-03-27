@@ -1,6 +1,7 @@
 from time import time, gmtime
 import tkinter as tk
 import json
+import sqlite3
 
 
 class Session:
@@ -70,6 +71,19 @@ class Session:
         }
 
         return json.dumps(session_stats_dict)
+
+    def store(self):
+        conn = sqlite3.connect('sessions.db')
+        c = conn.cursor()
+
+        c.execute("CREATE TABLE IF NOT EXISTS sessions (PROPERTIES TEXT NOT NULL, STARTTIME TEXT NOT NULL)")
+        c.execute("INSERT INTO sessions VALUES (?, ?)", [self.session_to_JSON(), self.start])
+        # Save (commit) the changes
+        conn.commit()
+
+        # We can also close the connection if we are done with it.
+        # Just be sure any changes have been committed or they will be lost.
+        conn.close()
 
 
 class Account:
