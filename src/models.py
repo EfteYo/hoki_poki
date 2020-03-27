@@ -81,6 +81,9 @@ class Session:
         # Save (commit) the changes
         conn.commit()
 
+        # c.execute("SELECT * FROM sessions")
+        # print(c.fetchall())
+
         # We can also close the connection if we are done with it.
         # Just be sure any changes have been committed or they will be lost.
         conn.close()
